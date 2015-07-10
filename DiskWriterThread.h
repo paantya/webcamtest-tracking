@@ -1,7 +1,8 @@
 #pragma once
+
 #include "TSDataHandler.h"
+#include "TimingsDebug.h"
 #include <QtCore\qthread.h>
-#include "WebcamCapture.h"
 
 class DiskWriterThread : public QThread
 {

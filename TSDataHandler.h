@@ -11,8 +11,8 @@ public:
 	~TSDataHandler();
 	void WriteFrame(cv::Mat input);
 	bool ReadFrame(cv::Mat &output);
-	int frameLimit;
 private:
+	int frameLimit;
 	cv::Mat frame;
 	std::deque<cv::Mat> frame_queue;
 

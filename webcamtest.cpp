@@ -15,42 +15,40 @@
 #include <stdio.h>
 
 #include "WebcamCapture.h"
+#include "ProcessingThread.h"
 #include "DiskWriterThread.h"
+#include "OutputWindow.h"
 
 using namespace std;
 using namespace cv;
 
-VideoWriter vw;
-
-bool writerReady;
-
-void workerFunc()
-{
-	while (true)
-	{
-		//		if (!vc.isOpened())
-		return;
-		Mat frame;
-		//	vc >> frame;
-
-	}
-}
-
 int main(int argc, char* argv[])
 {
 	// init
-	//TSDataHandler dh = TSDataHandler();
+	TSDataHandler* dh_cap2proc = new TSDataHandler();
+	TSDataHandler* dh_proc2out = new TSDataHandler();
+
 	// spawn threads
-	WebcamCapture capThread;
-	//DiskWriterThread writeThread(&dh);
+	WebcamCapture capThread(dh_cap2proc);
+	ProcessingThread procThread(dh_cap2proc, dh_proc2out);
+	//OutputWindow winThread(dh_proc2out);
 	capThread.start();
-	//writeThread.start();
-	// work for 10s and finish all threads
-	//writeThread.wait(2000);
-	//writeThread.stop();
-	capThread.wait();
-	capThread.stop();
-	printf("terminated");
-	//getchar();
+	procThread.start();
+
+	Mat img;
+	// work
+	forever
+	{
+		if (dh_proc2out->ReadFrame(img))
+		{
+			imshow("Output", img);
+			waitKey(1);
+		}
+	}
+
+	// exit
+	capThread.exit();
+	procThread.exit();
+
 	return 0;
 }

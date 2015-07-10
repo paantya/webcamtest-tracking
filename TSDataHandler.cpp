@@ -14,7 +14,7 @@ bool TSDataHandler::ReadFrame(cv::Mat &output)
 		return false;
 	frame = frame_queue.back();
 	frame.copyTo(output);
-	printf("wrote a frame, %i left\n", frame_queue.size());
+	//printf("wrote a frame, %i left\n", frame_queue.size());
 	frame_queue.pop_back();
 	frame.release();
 
