@@ -15,7 +15,6 @@ class WebcamCapture : public QThread
 public:
 	WebcamCapture(TSDataHandler *dh_out);
 	WebcamCapture();
-	bool useOpticalFlow = false;
 	~WebcamCapture();
 private:
 	cv::VideoCapture *vc;

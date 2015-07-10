@@ -1,5 +1,3 @@
-#define DEBUG_HELI_TIMINGS
-
 // illegal things happen below
 #ifdef DEBUG_HELI_TIMINGS
 #include <QtCore\qelapsedtimer.h>

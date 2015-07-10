@@ -140,6 +140,7 @@ artifacts/
 *.svclog
 *.scc
 
+
 # Chutzpah Test files
 _Chutzpah*
 
@@ -277,3 +278,7 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
+
+# Visual Studio
+*.tlog
+Debug*/
