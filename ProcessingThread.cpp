@@ -76,8 +76,8 @@ void ProcessingThread::OpticalFlowHandle(Mat &previmg, Mat lastimg, vector<Point
 		orig_pts = orig_pts_new;
 		prev_pts = tracked_pts;
 		nextimg.copyTo(previmg);
-		DBG_WriteFrame(dh_out);
 	}
+	DBG_WriteFrame(dh_out);
 
 }
 

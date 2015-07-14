@@ -2,7 +2,6 @@
 
 #include "WebcamCapture.h"
 #include "ProcessingThread.h"
-#include "DiskWriterThread.h"
 #include "TSDataHandler.h"
 
 int main(int argc, char* argv[])
