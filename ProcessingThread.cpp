@@ -12,10 +12,8 @@ ProcessingThread::ProcessingThread(TSDataHandler *dh_in, TSDataHandler *dh_out)
 
 void ProcessingThread::run()
 {
-	Mat orig, previmg, output, mask;
+	Mat orig, previmg;
 	vector<Point2f> prev_pts, orig_pts;
-	vector<uchar> m_status;
-	Mat m_error;
 
 	TimerCreate();
 
@@ -108,7 +106,7 @@ bool ProcessingThread::CrossDetect(Mat gray, vector<Point2f> &cross)
 	Mat bw;
 	Canny(gray, bw, tresholdCannyMin, tresholdCannyMax, 5);
 
-	findContours(bw.clone(), contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
+	findContours(bw, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
 
 	for (int i = 0; i < contours.size(); i++)
 	{

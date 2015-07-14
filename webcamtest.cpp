@@ -16,7 +16,6 @@ int main(int argc, char* argv[])
 	ProcessingThread procThread(dh_cap2proc, dh_proc2out);
 	capThread.start();
 	procThread.start();
-
 	// work
 	forever
 	{
