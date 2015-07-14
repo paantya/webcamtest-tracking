@@ -224,6 +224,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DebugOutput.h" />
     <ClInclude Include="DiskWriterThread.h" />
     <ClInclude Include="TimingsDebug.h" />
     <ClInclude Include="ProcessingThread.h" />

@@ -7,7 +7,7 @@
 class TSDataHandler
 {
 public:
-	TSDataHandler(int frameLimit = 150);
+	TSDataHandler(int frameLimit = 10);
 	~TSDataHandler();
 	void WriteFrame(cv::Mat input);
 	bool ReadFrame(cv::Mat &output);
