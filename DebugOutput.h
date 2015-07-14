@@ -1,6 +1,6 @@
 #define DEBUG_IMAGE_OUTPUT
 #ifdef DEBUG_IMAGE_OUTPUT
-#define OUTPUT_IMG_VAR output
+#define OUTPUT_IMG_VAR __output
 #define DBG_InitOutputImage() Mat OUTPUT_IMG_VAR
 #define DBG_CreateOutputFromImage(img) OUTPUT_IMG_VAR = img.clone()
 #define DBG_DrawOutputCircle(pt) circle(OUTPUT_IMG_VAR, pt, 5, Scalar(255))
