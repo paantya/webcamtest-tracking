@@ -44,17 +44,20 @@ void ProcessingThread::OpticalFlowHandle(Mat &previmg, Mat lastimg, vector<Point
 	vector<uchar> m_status;
 
 	cvtColor(lastimg, nextimg, CV_BGR2GRAY);
-	if (orig_pts.size() < 8)
+	if (orig_pts.size() != 8)
 	{
 		prev_pts.clear();
-		previmg = nextimg.clone();
-
+		
 		//goodFeaturesToTrack(nextimg, prev_pts, 10, 0.05, 0.2, mask);
-		CrossDetect(previmg, prev_pts);
-		orig_pts = prev_pts;
+		if (CrossDetect(nextimg, prev_pts))
+		{
+			cvtColor(lastimg, previmg, CV_BGR2GRAY);
+			orig_pts = prev_pts;
+		}
 	}
 	else
 	{
+		//cvtColor(lastimg, nextimg, CV_BGR2GRAY);
 		if (prev_pts.size() > 0 && !previmg.empty())
 		{
 			calcOpticalFlowPyrLK(previmg, nextimg, prev_pts, next_pts, m_status, m_error);
@@ -98,9 +101,6 @@ bool ProcessingThread::CrossDetect(Mat gray, vector<Point2f> &cross)
 	bool found = true;
 	vector<Mat> contours;
 	vector<Point> approx;
-
-	DBG_InitOutputImage();
-	DBG_CreateOutputFromImage(gray);
 
 	//Mat gray;
 	//cvtColor(img, gray, CV_BGR2GRAY);
@@ -162,19 +162,13 @@ bool ProcessingThread::CrossDetect(Mat gray, vector<Point2f> &cross)
 			}
 		}
 
-		if (found){
-			DBG_DrawOutputText("Cross detected", Point(10, 200));
-
+		if (found)
+		{
 			for each(Point pt in approx)
 				cross.push_back((Point2f)pt);
+			return true;
 		}
 
-		int k;
-		for (k = 0; k < approx.size() - 1; k++){
-			DBG_DrawOutputLine(approx[k], approx[k + 1]);
-		};
-		DBG_DrawOutputLine(approx[k], approx[0]);
 	}
-	DBG_WriteFrame(dh_out);
 	return found;
 }

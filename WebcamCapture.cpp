@@ -32,7 +32,10 @@ WebcamCapture::WebcamCapture(TSDataHandler *dh_out)
 {
 	// init our capture
 	this->vc = new VideoCapture;
+	
 	vc->open(0); // open default device
+	vc->set(CV_CAP_PROP_FRAME_HEIGHT, 240);
+	vc->set(CV_CAP_PROP_FRAME_WIDTH, 320);
 	this->dh_out = dh_out;
 }
 
