@@ -11,10 +11,10 @@ void WebcamCapture::run()
 		vector<unsigned char> m_status;
 		vector<float>         m_error;
 		vector<Point2f> trackedPts;
-		if (vc->isOpened())
+		if (mVideoCapture->isOpened())
 		{
-			if (vc->read(orig))
-				dh_out->WriteFrame(orig);
+			if (mVideoCapture->read(orig))
+				mDataHandler_out->WriteFrame(orig);
 		}
 		else
 		{
@@ -24,22 +24,22 @@ void WebcamCapture::run()
 		
 		TimerElapsed();
 	}
-	vc->release();
+	mVideoCapture->release();
 	this->exit(0);
 }
 
 WebcamCapture::WebcamCapture(TSDataHandler *dh_out)
 {
 	// init our capture
-	this->vc = new VideoCapture;
+	this->mVideoCapture = new VideoCapture;
 	
-	vc->open(0); // open default device
-	vc->set(CV_CAP_PROP_FRAME_HEIGHT, 240);
-	vc->set(CV_CAP_PROP_FRAME_WIDTH, 320);
-	this->dh_out = dh_out;
+	mVideoCapture->open(0); // open default device
+	mVideoCapture->set(CV_CAP_PROP_FRAME_HEIGHT, 240);
+	mVideoCapture->set(CV_CAP_PROP_FRAME_WIDTH, 320);
+	this->mDataHandler_out = dh_out;
 }
 
 WebcamCapture::~WebcamCapture()
 {
-	vc->release();
+	mVideoCapture->release();
 }

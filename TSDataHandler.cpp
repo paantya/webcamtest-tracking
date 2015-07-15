@@ -2,7 +2,7 @@
 
 TSDataHandler::TSDataHandler(int frameLimit)
 {
-	this->frameLimit = frameLimit;
+	mFrameLimit = frameLimit;
 }
 
 bool TSDataHandler::ReadFrame(cv::Mat &output)
@@ -10,12 +10,16 @@ bool TSDataHandler::ReadFrame(cv::Mat &output)
 	QMutex m;
 	m.lock();
 
-	if (frame_queue.empty())
+	if (mFrameQueue.empty())	
+    {
+		m.unlock();
 		return false;
-	frame = frame_queue.back();
-	frame.copyTo(output);
-	frame_queue.pop_back();
-	frame.release();
+	}
+
+	mFrame = mFrameQueue.back();
+	mFrame.copyTo(output);
+	mFrameQueue.pop_back();
+	mFrame.release();
 
 	m.unlock();
 	return true;
@@ -26,10 +30,13 @@ void TSDataHandler::WriteFrame(cv::Mat input)
 	QMutex m;
 	m.lock();
 
-	if (input.dims == 0 || frame_queue.size() > this->frameLimit)
+	if (input.dims == 0 || mFrameQueue.size() > mFrameLimit)
+	{
+		m.unlock();
 		return;
+	}
 
-	frame_queue.push_front(input);
+	mFrameQueue.push_front(input);
 
 	m.unlock();
 }

@@ -18,7 +18,7 @@ public:
 	WebcamCapture();
 	~WebcamCapture();
 private:
-	cv::VideoCapture *vc;
+	cv::VideoCapture *mVideoCapture;
 	void run();
-	TSDataHandler *dh_out;
+	TSDataHandler *mDataHandler_out;
 };

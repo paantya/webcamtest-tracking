@@ -19,8 +19,8 @@ public:
 	ProcessingThread(TSDataHandler *dh_in, TSDataHandler *dh_out = nullptr);
 	~ProcessingThread();
 private:
-	bool CrossDetect(Mat img, vector<Point2f> &cross);
-	void OpticalFlowHandle(Mat &previmg, Mat lastimg, vector<Point2f> &prev_pts, vector<Point2f> &orig_pts);
+	bool mCrossDetect(Mat img, vector<Point2f> &cross);
+	void mOpticalFlowHandle(Mat &previmg, Mat lastimg, vector<Point2f> &prev_pts, vector<Point2f> &orig_pts);
 	void run();
-	TSDataHandler *dh_in, *dh_out;
+	TSDataHandler *mDataHandler_in, *mDataHandler_out;
 };

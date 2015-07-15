@@ -1,13 +1,12 @@
 #include "ProcessingThread.h"
 
-
 ProcessingThread::ProcessingThread(TSDataHandler *dh_in, TSDataHandler *dh_out)
 {
-	this->dh_in = dh_in;
-	if (dh_out == nullptr)
-		this->dh_out = this->dh_in;
+	this->mDataHandler_in = dh_in;
+	if (dh_out == NULL)
+		this->mDataHandler_out = this->mDataHandler_in;
 	else
-		this->dh_out = dh_out;
+		this->mDataHandler_out = dh_out;
 }
 
 void ProcessingThread::run()
@@ -19,10 +18,10 @@ void ProcessingThread::run()
 
 	while (isRunning())
 	{
-		while (dh_in->ReadFrame(orig))
+		while (mDataHandler_in->ReadFrame(orig))
 		{
 			TimerUpdate();
-			OpticalFlowHandle(previmg, orig, prev_pts, orig_pts);
+			mOpticalFlowHandle(previmg, orig, prev_pts, orig_pts);
 			TimerElapsed();
 		}
 		yieldCurrentThread();
@@ -33,7 +32,7 @@ ProcessingThread::~ProcessingThread()
 {
 }
 
-void ProcessingThread::OpticalFlowHandle(Mat &previmg, Mat lastimg, vector<Point2f> &prev_pts, vector<Point2f> &orig_pts)
+void ProcessingThread::mOpticalFlowHandle(Mat &previmg, Mat lastimg, vector<Point2f> &prev_pts, vector<Point2f> &orig_pts)
 {
 	DBG_InitOutputImage();
 	DBG_CreateOutputFromImage(lastimg);
@@ -47,7 +46,7 @@ void ProcessingThread::OpticalFlowHandle(Mat &previmg, Mat lastimg, vector<Point
 		prev_pts.clear();
 		
 		//goodFeaturesToTrack(nextimg, prev_pts, 10, 0.05, 0.2, mask);
-		if (CrossDetect(nextimg, prev_pts))
+		if (mCrossDetect(nextimg, prev_pts))
 		{
 			cvtColor(lastimg, previmg, CV_BGR2GRAY);
 			orig_pts = prev_pts;
@@ -75,7 +74,7 @@ void ProcessingThread::OpticalFlowHandle(Mat &previmg, Mat lastimg, vector<Point
 		prev_pts = tracked_pts;
 		nextimg.copyTo(previmg);
 	}
-	DBG_WriteFrame(dh_out);
+	DBG_WriteFrame(mDataHandler_out);
 
 }
 
@@ -88,7 +87,7 @@ static inline double angle(Point pt1, Point pt2, Point pt0)
 	return (dx1*dx2 + dy1*dy2) / sqrt((dx1*dx1 + dy1*dy1)*(dx2*dx2 + dy2*dy2) + 1e-10);
 }
 
-bool ProcessingThread::CrossDetect(Mat gray, vector<Point2f> &cross)
+bool ProcessingThread::mCrossDetect(Mat gray, vector<Point2f> &cross)
 {
 	double tresholdmin = 0.6;
 	int tresholdmin_int = 6;
@@ -163,7 +162,7 @@ bool ProcessingThread::CrossDetect(Mat gray, vector<Point2f> &cross)
 		if (found)
 		{
 			for each(Point pt in approx)
-				cross.push_back((Point2f)pt);
+				cross.push_back((Point2i)pt);
 			return true;
 		}
 

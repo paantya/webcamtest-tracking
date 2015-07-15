@@ -12,9 +12,9 @@ public:
 	void WriteFrame(cv::Mat input);
 	bool ReadFrame(cv::Mat &output);
 private:
-	int frameLimit;
-	cv::Mat frame;
-	std::deque<cv::Mat> frame_queue;
+	int mFrameLimit;
+	cv::Mat mFrame;
+	std::deque<cv::Mat> mFrameQueue;
 
 };
 

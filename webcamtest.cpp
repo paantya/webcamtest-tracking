@@ -19,16 +19,19 @@ int main(int argc, char* argv[])
 	// work
 	forever
 	{
+		int key = -1;
 		if (dh_proc2out->ReadFrame(img))
 		{
 			cv::imshow("Output", img);
-			cv::waitKey(1);
+			key = cv::waitKey(1);
+			if (key == 27)
+				break;
 		}
 	}
 
 	// exit
 	capThread.exit();
 	procThread.exit();
-
+	//getchar();
 	return 0;
 }

@@ -1,4 +1,5 @@
 // illegal things happen below
+#pragma once
 #ifdef DEBUG_HELI_TIMINGS
 #include <QtCore\qelapsedtimer.h>
 #define TimerCreate() QElapsedTimer __QET
