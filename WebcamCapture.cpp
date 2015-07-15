@@ -33,7 +33,7 @@ void WebcamCapture::run()
 	this->exit(0);
 }
 
-WebcamCapture::WebcamCapture(TSDataHandler *dh_out, int cameraNum = 0)
+WebcamCapture::WebcamCapture(TSDataHandler *dh_out, int cameraNum)
 {
 	// инициализация камеры стандартной камеры 
 	// с размером выходного изображения 320x240
