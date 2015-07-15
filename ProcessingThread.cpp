@@ -2,7 +2,10 @@
 
 ProcessingThread::ProcessingThread(TSDataHandler *dh_in, TSDataHandler *dh_out)
 {
+	// инициализация
 	this->mDataHandler_in = dh_in;
+
+	// если выходной буфер не указан, пишем во входной
 	if (dh_out == NULL)
 		this->mDataHandler_out = this->mDataHandler_in;
 	else
@@ -20,8 +23,13 @@ void ProcessingThread::run()
 	{
 		while (mDataHandler_in->ReadFrame(orig))
 		{
+			// засечение времени
 			TimerUpdate();
+
+			// вызов обработчика
 			mOpticalFlowHandle(previmg, orig, prev_pts, orig_pts);
+
+            // вывод времени
 			TimerElapsed();
 		}
 		yieldCurrentThread();
@@ -34,6 +42,7 @@ ProcessingThread::~ProcessingThread()
 
 void ProcessingThread::mOpticalFlowHandle(Mat &previmg, Mat lastimg, vector<Point2f> &prev_pts, vector<Point2f> &orig_pts)
 {
+	// создание вывода для отладки
 	DBG_InitOutputImage();
 	DBG_CreateOutputFromImage(lastimg);
 	Mat nextimg, mask, m_error;
@@ -41,11 +50,13 @@ void ProcessingThread::mOpticalFlowHandle(Mat &previmg, Mat lastimg, vector<Poin
 	vector<uchar> m_status;
 
 	cvtColor(lastimg, nextimg, CV_BGR2GRAY);
+    
+    // алгоритм обнаружения на данном этапе всегда вернёт 8 точек
 	if (orig_pts.size() != 8)
 	{
 		prev_pts.clear();
-		
-		//goodFeaturesToTrack(nextimg, prev_pts, 10, 0.05, 0.2, mask);
+
+		// в случае обнаружения креста задаём начальные данные для OpticalFlow
 		if (mCrossDetect(nextimg, prev_pts))
 		{
 			cvtColor(lastimg, previmg, CV_BGR2GRAY);
@@ -54,11 +65,13 @@ void ProcessingThread::mOpticalFlowHandle(Mat &previmg, Mat lastimg, vector<Poin
 	}
 	else
 	{
-		//cvtColor(lastimg, nextimg, CV_BGR2GRAY);
+        // просчёт смещения точек
 		if (prev_pts.size() > 0 && !previmg.empty())
 		{
 			calcOpticalFlowPyrLK(previmg, nextimg, prev_pts, next_pts, m_status, m_error);
 		}
+
+        // проверка наличия и запись нового положения точек
 		for (int i = 0; i < m_status.size(); i++)
 		{
 			int j = 1;
@@ -70,6 +83,7 @@ void ProcessingThread::mOpticalFlowHandle(Mat &previmg, Mat lastimg, vector<Poin
 			}
 		}
 
+        // вывод новых данных в соответствующие переменные
 		orig_pts = orig_pts_new;
 		prev_pts = tracked_pts;
 		nextimg.copyTo(previmg);
@@ -99,9 +113,6 @@ bool ProcessingThread::mCrossDetect(Mat gray, vector<Point2f> &cross)
 	vector<Mat> contours;
 	vector<Point> approx;
 
-	//Mat gray;
-	//cvtColor(img, gray, CV_BGR2GRAY);
-
 	Mat bw;
 	Canny(gray, bw, tresholdCannyMin, tresholdCannyMax, 5);
 
@@ -113,7 +124,8 @@ bool ProcessingThread::mCrossDetect(Mat gray, vector<Point2f> &cross)
 
 		if (fabs(contourArea(contours[i])) < 100 || isContourConvex(approx) || (approx.size() != 8))
 			continue;
-
+            
+        // TODO: переделать
 		double x0 = approx[0].x;
 		double x1 = approx[1].x;
 		double x2 = approx[2].x;
@@ -132,6 +144,7 @@ bool ProcessingThread::mCrossDetect(Mat gray, vector<Point2f> &cross)
 		double y6 = approx[6].y;
 		double y7 = approx[7].y;
 
+        // проверка параметров найденного контура
 		double length_top = (((abs(x0 - x1) + abs(x0 - x7)) / 2) + ((abs(y0 - y1) + abs(y0 - y7)) / 2)) / 2;
 		double length_bot = (((abs(x3 - x4) + abs(x4 - x5)) / 2) + ((abs(y3 - y4) + abs(y4 - y5)) / 2)) / 2;
 		double ratio1 = ((((length_top + length_bot) / length_top - 0.5) + ((length_top + length_bot) / length_bot - 0.5))) / 2 - 0.5;
@@ -146,11 +159,12 @@ bool ProcessingThread::mCrossDetect(Mat gray, vector<Point2f> &cross)
 			continue;
 		}
 
-		for (int j = 0; j < approx.size() - 3; j++){
+		for (int j = 0; j < approx.size() - 3; j++)
+		{
 			double ang1 = angle(approx[j], approx[j + 1], approx[j + 2]);
 			double ang2 = angle(approx[j + 1], approx[j + 2], approx[j + 3]);
-			//printf("ang1: %f\t, ang2: %f \n", ang1, ang2);
-			if (ang1 > 0.7){
+			if (ang1 > 0.7)
+            {
 				if (!(ang1 > 0.7 && ang2 < 0.3))
 				{
 					found = false;
@@ -161,8 +175,8 @@ bool ProcessingThread::mCrossDetect(Mat gray, vector<Point2f> &cross)
 
 		if (found)
 		{
-			for each(Point pt in approx)
-				cross.push_back((Point2i)pt);
+			for (int i = 0; i < approx.size(); i++)
+				cross.push_back((Point2i)approx[i]);
 			return true;
 		}
 
