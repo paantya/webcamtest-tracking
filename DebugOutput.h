@@ -1,6 +1,6 @@
 #pragma once
 
-// отладочный вывод изображений
+// РѕС‚Р»Р°РґРѕС‡РЅС‹Р№ РІС‹РІРѕРґ РёР·РѕР±СЂР°Р¶РµРЅРёР№
 #ifdef DEBUG_IMAGE_OUTPUT
 #define OUTPUT_IMG_VAR __output
 #define DBG_InitOutputImage() Mat OUTPUT_IMG_VAR

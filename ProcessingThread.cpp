@@ -2,10 +2,10 @@
 
 ProcessingThread::ProcessingThread(TSDataHandler *dh_in, TSDataHandler *dh_out)
 {
-	// инициализация
+	// РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ
 	this->mDataHandler_in = dh_in;
 
-	// если выходной буфер не указан, пишем во входной
+	// РµСЃР»Рё РІС‹С…РѕРґРЅРѕР№ Р±СѓС„РµСЂ РЅРµ СѓРєР°Р·Р°РЅ, РїРёС€РµРј РІРѕ РІС…РѕРґРЅРѕР№
 	if (dh_out == NULL)
 		this->mDataHandler_out = this->mDataHandler_in;
 	else
@@ -23,13 +23,13 @@ void ProcessingThread::run()
 	{
 		while (mDataHandler_in->ReadFrame(orig))
 		{
-			// засечение времени
+			// Р·Р°СЃРµС‡РµРЅРёРµ РІСЂРµРјРµРЅРё
 			TimerUpdate();
 
-			// вызов обработчика
+			// РІС‹Р·РѕРІ РѕР±СЂР°Р±РѕС‚С‡РёРєР°
 			mOpticalFlowHandle(previmg, orig, prev_pts, orig_pts);
 
-            // вывод времени
+            // РІС‹РІРѕРґ РІСЂРµРјРµРЅРё
 			TimerElapsed();
 		}
 		yieldCurrentThread();
@@ -42,7 +42,7 @@ ProcessingThread::~ProcessingThread()
 
 void ProcessingThread::mOpticalFlowHandle(Mat &previmg, Mat lastimg, vector<Point2f> &prev_pts, vector<Point2f> &orig_pts)
 {
-	// создание вывода для отладки
+	// СЃРѕР·РґР°РЅРёРµ РІС‹РІРѕРґР° РґР»СЏ РѕС‚Р»Р°РґРєРё
 	DBG_InitOutputImage();
 	DBG_CreateOutputFromImage(lastimg);
 	Mat nextimg, mask, m_error;
@@ -51,12 +51,12 @@ void ProcessingThread::mOpticalFlowHandle(Mat &previmg, Mat lastimg, vector<Poin
 
 	cvtColor(lastimg, nextimg, CV_BGR2GRAY);
     
-    // алгоритм обнаружения на данном этапе всегда вернёт 8 точек
+    // Р°Р»РіРѕСЂРёС‚Рј РѕР±РЅР°СЂСѓР¶РµРЅРёСЏ РЅР° РґР°РЅРЅРѕРј СЌС‚Р°РїРµ РІСЃРµРіРґР° РІРµСЂРЅС‘С‚ 8 С‚РѕС‡РµРє
 	if (orig_pts.size() != 8)
 	{
 		prev_pts.clear();
 
-		// в случае обнаружения креста задаём начальные данные для OpticalFlow
+		// РІ СЃР»СѓС‡Р°Рµ РѕР±РЅР°СЂСѓР¶РµРЅРёСЏ РєСЂРµСЃС‚Р° Р·Р°РґР°С‘Рј РЅР°С‡Р°Р»СЊРЅС‹Рµ РґР°РЅРЅС‹Рµ РґР»СЏ OpticalFlow
 		if (mCrossDetect(nextimg, prev_pts))
 		{
 			cvtColor(lastimg, previmg, CV_BGR2GRAY);
@@ -65,13 +65,13 @@ void ProcessingThread::mOpticalFlowHandle(Mat &previmg, Mat lastimg, vector<Poin
 	}
 	else
 	{
-        // просчёт смещения точек
+        // РїСЂРѕСЃС‡С‘С‚ СЃРјРµС‰РµРЅРёСЏ С‚РѕС‡РµРє
 		if (prev_pts.size() > 0 && !previmg.empty())
 		{
 			calcOpticalFlowPyrLK(previmg, nextimg, prev_pts, next_pts, m_status, m_error);
 		}
 
-        // проверка наличия и запись нового положения точек
+        // РїСЂРѕРІРµСЂРєР° РЅР°Р»РёС‡РёСЏ Рё Р·Р°РїРёСЃСЊ РЅРѕРІРѕРіРѕ РїРѕР»РѕР¶РµРЅРёСЏ С‚РѕС‡РµРє
 		for (int i = 0; i < m_status.size(); i++)
 		{
 			int j = 1;
@@ -83,7 +83,7 @@ void ProcessingThread::mOpticalFlowHandle(Mat &previmg, Mat lastimg, vector<Poin
 			}
 		}
 
-        // вывод новых данных в соответствующие переменные
+        // РІС‹РІРѕРґ РЅРѕРІС‹С… РґР°РЅРЅС‹С… РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРµ РїРµСЂРµРјРµРЅРЅС‹Рµ
 		orig_pts = orig_pts_new;
 		prev_pts = tracked_pts;
 		nextimg.copyTo(previmg);
@@ -113,19 +113,23 @@ bool ProcessingThread::mCrossDetect(Mat gray, vector<Point2f> &cross)
 	vector<Mat> contours;
 	vector<Point> approx;
 
+    // С„РёР»СЊС‚СЂ РљРµРЅРЅРё
 	Mat bw;
 	Canny(gray, bw, tresholdCannyMin, tresholdCannyMax, 5);
 
+    // РЅР°С…РѕР¶РґРµРЅРёРµ РєРѕРЅС‚СѓСЂРѕРІ
 	findContours(bw, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
 
 	for (int i = 0; i < contours.size(); i++)
 	{
+
+        // РїСЂРёР±Р»РёР¶РµРЅРёРµ РєРѕРЅС‚СѓСЂРѕРІ Р»РѕРјР°РЅС‹РјРё
 		approxPolyDP(Mat(contours[i]), approx, arcLength(Mat(contours[i]), true)*0.02, true);
 
 		if (fabs(contourArea(contours[i])) < 100 || isContourConvex(approx) || (approx.size() != 8))
 			continue;
             
-        // TODO: переделать
+        // TODO: РїРµСЂРµРґРµР»Р°С‚СЊ
 		double x0 = approx[0].x;
 		double x1 = approx[1].x;
 		double x2 = approx[2].x;
@@ -144,7 +148,7 @@ bool ProcessingThread::mCrossDetect(Mat gray, vector<Point2f> &cross)
 		double y6 = approx[6].y;
 		double y7 = approx[7].y;
 
-        // проверка параметров найденного контура
+        // РїСЂРѕРІРµСЂРєР° РїР°СЂР°РјРµС‚СЂРѕРІ РЅР°Р№РґРµРЅРЅРѕРіРѕ РєРѕРЅС‚СѓСЂР°
 		double length_top = (((abs(x0 - x1) + abs(x0 - x7)) / 2) + ((abs(y0 - y1) + abs(y0 - y7)) / 2)) / 2;
 		double length_bot = (((abs(x3 - x4) + abs(x4 - x5)) / 2) + ((abs(y3 - y4) + abs(y4 - y5)) / 2)) / 2;
 		double ratio1 = ((((length_top + length_bot) / length_top - 0.5) + ((length_top + length_bot) / length_bot - 0.5))) / 2 - 0.5;

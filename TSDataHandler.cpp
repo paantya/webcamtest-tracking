@@ -1,10 +1,13 @@
 #include "TSDataHandler.h"
 
+
 TSDataHandler::TSDataHandler(int frameLimit)
 {
+	// лимит изображений в очереди
 	mFrameLimit = frameLimit;
 }
 
+// функция считывания изображения из очереди
 bool TSDataHandler::ReadFrame(cv::Mat &output)
 {
 	QMutex m;
@@ -25,12 +28,13 @@ bool TSDataHandler::ReadFrame(cv::Mat &output)
 	return true;
 }
 
+// функция записи изображения из очереди
 void TSDataHandler::WriteFrame(cv::Mat input)
 {
 	QMutex m;
 	m.lock();
 
-	if (input.dims == 0 || mFrameQueue.size() > mFrameLimit)
+	if (input.empty() || mFrameQueue.size() > mFrameLimit)
 	{
 		m.unlock();
 		return;

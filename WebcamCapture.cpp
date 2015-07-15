@@ -2,8 +2,9 @@
 
 void WebcamCapture::run()
 {
-
 	Mat orig;
+
+	// макрос для создания таймера
 	TimerCreate();
 	while (isRunning())
 	{
@@ -11,6 +12,9 @@ void WebcamCapture::run()
 		vector<unsigned char> m_status;
 		vector<float>         m_error;
 		vector<Point2f> trackedPts;
+
+		// если камера инициализирована и можно считать
+		// изображение, то добавляем в очередь на обработку
 		if (mVideoCapture->isOpened())
 		{
 			if (mVideoCapture->read(orig))
@@ -24,16 +28,17 @@ void WebcamCapture::run()
 		
 		TimerElapsed();
 	}
+	// освобождение ресурсов камеры
 	mVideoCapture->release();
 	this->exit(0);
 }
 
-WebcamCapture::WebcamCapture(TSDataHandler *dh_out)
+WebcamCapture::WebcamCapture(TSDataHandler *dh_out, int cameraNum = 0)
 {
-	// init our capture
+	// инициализация камеры стандартной камеры 
+	// с размером выходного изображения 320x240
 	this->mVideoCapture = new VideoCapture;
-	
-	mVideoCapture->open(0); // open default device
+	mVideoCapture->open(cameraNum);
 	mVideoCapture->set(CV_CAP_PROP_FRAME_HEIGHT, 240);
 	mVideoCapture->set(CV_CAP_PROP_FRAME_WIDTH, 320);
 	this->mDataHandler_out = dh_out;

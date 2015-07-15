@@ -14,7 +14,7 @@ using namespace cv;
 class WebcamCapture : public QThread
 {
 public:
-	WebcamCapture(TSDataHandler *dh_out);
+	WebcamCapture(TSDataHandler *dh_out, int cameraNum = 0);
 	WebcamCapture();
 	~WebcamCapture();
 private:

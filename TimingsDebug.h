@@ -1,6 +1,6 @@
 #pragma once
 
-// отладочный замер времени
+// РѕС‚Р»Р°РґРѕС‡РЅС‹Р№ Р·Р°РјРµСЂ РІСЂРµРјРµРЅРё
 #ifdef DEBUG_HELI_TIMINGS
 #include <QtCore\qelapsedtimer.h>
 #define DEBUG_TIMER_VAR __QET

@@ -4,6 +4,7 @@
 #include <deque>
 #include <list>
 
+// Thread Safe Data Handler
 class TSDataHandler
 {
 public:
@@ -14,6 +15,7 @@ public:
 private:
 	int mFrameLimit;
 	cv::Mat mFrame;
+	// Очередь фрэймов
 	std::deque<cv::Mat> mFrameQueue;
 
 };
