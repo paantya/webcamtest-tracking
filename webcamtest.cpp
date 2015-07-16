@@ -1,4 +1,4 @@
-#include <opencv2\highgui\highgui.hpp>
+#include <opencv2/highgui/highgui.hpp>
 
 #include "WebcamCapture.h"
 #include "ProcessingThread.h"
@@ -26,10 +26,10 @@ int main(int argc, char* argv[])
 		{
 			cv::imshow("Output", img);
 			key = cv::waitKey(1);
-			// если нажат пробел, то break
+			// если нажат esc, то break
 			if (key == 27)
-				break;
-		}
+			  break;
+	  }
 	}
 
 	// закрытие потоков

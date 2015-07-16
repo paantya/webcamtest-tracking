@@ -1,9 +1,9 @@
 #pragma once
 
-#include <QtCore\qthread.h>
-#include <opencv2\core\core.hpp>
-#include <opencv2\imgproc\imgproc.hpp>
-#include <opencv2\video\video.hpp>
+#include <QtCore/qthread.h>
+#include <opencv2/core/core.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/video/video.hpp>
 #include "TSDataHandler.h"
 #include "TimingsDebug.h"
 #include "DebugOutput.h"
@@ -16,7 +16,7 @@ class ProcessingThread :
 	public QThread
 {
 public:
-	ProcessingThread(TSDataHandler *dh_in, TSDataHandler *dh_out = nullptr);
+	ProcessingThread(TSDataHandler *dh_in, TSDataHandler *dh_out = NULL);
 	~ProcessingThread();
 private:
 	bool mCrossDetect(Mat img, vector<Point2f> &cross);

@@ -1,6 +1,6 @@
 #pragma once
-#include <opencv2\highgui\highgui.hpp>
-#include <QtCore\qmutex.h>
+#include <opencv2/highgui/highgui.hpp>
+#include <QtCore/qmutex.h>
 #include <deque>
 #include <list>
 
@@ -19,4 +19,3 @@ private:
 	std::deque<cv::Mat> mFrameQueue;
 
 };
-

@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include <QtCore\qthread.h>
-#include <opencv2\highgui\highgui.hpp>
-#include <opencv2\imgproc\imgproc.hpp>
+#include <QtCore/qthread.h>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
 #include "TSDataHandler.h"
 #include "TimingsDebug.h"
