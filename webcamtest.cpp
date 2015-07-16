@@ -7,13 +7,13 @@
 int main(int argc, char* argv[])
 {
 	// инициализация очереди на обработку изображения
-	TSDataHandler* cap2proc = new TSDataHandler();
+	TSDataHandler<Mat>* cap2proc = new TSDataHandler<Mat>();
 	// инициализация очереди для вывода 
-	TSDataHandler* proc2out = new TSDataHandler();
+	TSDataHandler<Mat>* proc2out = new TSDataHandler<Mat>();
 	cv::Mat img;
 
 	// инициализация и старт потоков считывания и обработки данных
-	WebcamCapture capThread(cap2proc);
+	WebcamCapture capThread(cap2proc, 0);
 	ProcessingThread procThread(cap2proc, proc2out);
 	capThread.start();
 	procThread.start();
@@ -21,14 +21,14 @@ int main(int argc, char* argv[])
 	// цикл вывода обработанных изображений
 	forever
 	{
-		int key = -1;
-		if (proc2out->ReadFrame(img))
-		{
-			cv::imshow("Output", img);
-			key = cv::waitKey(1);
-			// если нажат esc, то break
-			if (key == 27)
-			  break;
+	  int key = -1;
+	  if (proc2out->Read(img))
+	  {
+		cv::imshow("Output", img);
+		key = cv::waitKey(1);
+		// если нажат esc, то break
+		if (key == 27)
+		  break;
 	  }
 	}
 

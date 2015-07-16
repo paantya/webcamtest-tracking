@@ -1,7 +1,7 @@
 #include "TSDataHandler.h"
 
 
-TSDataHandler::TSDataHandler(int frameLimit)
+TSDataHandler(int frameLimit)
 {
 	// лимит изображений в очереди
 	mFrameLimit = frameLimit;
