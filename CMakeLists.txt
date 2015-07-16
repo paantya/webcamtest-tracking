@@ -19,8 +19,7 @@ add_executable( webcamtest-tracking ${Robot_Autogen_SOURCE_LIST}
     ProcessingThread.cpp  
     TimingsDebug.h     
     WebcamCapture.h
-    ProcessingThread.h    
-    TSDataHandler.cpp  
+    ProcessingThread.h 
     webcamtest.cpp
     TSDataHandler.h
     DebugOutput.h   
